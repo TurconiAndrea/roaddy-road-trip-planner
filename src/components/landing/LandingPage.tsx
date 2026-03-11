@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useTripStore } from "@/store/tripStore";
@@ -9,7 +9,9 @@ import type { TripMeta, GeocodingResult } from "@/types/trip";
 
 if (typeof document !== "undefined") {
   const style = document.createElement("style");
-  style.textContent = `@keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }`;
+  style.textContent = `
+    @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+  `;
   if (!document.head.querySelector("[data-spin]")) {
     style.setAttribute("data-spin", "");
     document.head.appendChild(style);
@@ -73,6 +75,15 @@ const inputStyle: React.CSSProperties = {
 export default function LandingPage() {
   const router     = useRouter();
   const createTrip = useTripStore(s => s.createTrip);
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const [title,           setTitle]           = useState("");
   const [startCity,       setStartCity]       = useState("");
@@ -150,8 +161,8 @@ export default function LandingPage() {
         rel="noopener noreferrer"
         style={{
           position:     "fixed",
-          bottom:       24,
-          right:        24,
+          bottom:       isMobile ? 16 : 24,
+          right:        isMobile ? 16 : 24,
           zIndex:       1000,
           boxShadow:    "0 4px 20px rgba(0,0,0,0.15)",
           borderRadius: 12,
@@ -165,8 +176,8 @@ export default function LandingPage() {
         <img
           src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
           alt="Buy Me A Coffee"
-          width={150}
-          height={42}
+          width={isMobile ? 120 : 150}
+          height={isMobile ? 34 : 42}
           style={{ display: "block" }}
         />
       </a>
@@ -176,7 +187,7 @@ export default function LandingPage() {
         display:        "flex",
         alignItems:     "center",
         justifyContent: "space-between",
-        padding:        "0 48px",
+        padding:        isMobile ? "0 20px" : "0 48px",
         height:         64,
         borderBottom:   "1px solid #F3F4F6",
         background:     "#fff",
@@ -207,7 +218,7 @@ export default function LandingPage() {
 
       {/* ── Hero: title + image ── */}
       <section style={{
-        padding:    "96px 64px",
+        padding:    isMobile ? "48px 20px" : "96px 64px",
         background: "linear-gradient(160deg, #FFF7ED 0%, #fff 60%)",
       }}>
         <div style={{
@@ -247,7 +258,7 @@ export default function LandingPage() {
               by day, and instantly see your route on an interactive map. No spreadsheets required.
             </p>
 
-            <div style={{ display: "flex", gap: 20, marginBottom: 24 }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginBottom: 24 }}>
               {["No credit card required", "Free forever plan"].map(t => (
                 <span key={t} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#6B7280" }}>
                   <span style={{
@@ -279,64 +290,66 @@ export default function LandingPage() {
                   src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1095348&theme=light&t=1773236644583"
                   width={250}
                   height={54}
-                  style={{ display: "block" }}
+                  style={{ display: "block", maxWidth: "100%" }}
                 />
               </a>
             </div>
           </div>
 
-          {/* Right: map preview */}
-          <div style={{
-            flex:         "1 1 340px",
-            maxWidth:     520,
-            borderRadius: 20,
-            overflow:     "hidden",
-            boxShadow:    "0 8px 48px rgba(0,0,0,0.10)",
-            border:       "1px solid #E5E7EB",
-            background:   "#F9FAFB",
-            position:     "relative",
-          }}>
-            <Image
-              src="/landing-preview.png"
-              alt="Roaddy map preview"
-              width={520}
-              height={360}
-              style={{ width: "100%", height: "auto", display: "block" }}
-            />
+          {/* Right: map preview — hidden on mobile */}
+          {!isMobile && (
             <div style={{
-              position:     "absolute",
-              bottom:       16,
-              right:        16,
-              background:   "#fff",
-              borderRadius: 14,
-              padding:      "10px 14px",
-              boxShadow:    "0 4px 16px rgba(0,0,0,0.12)",
-              display:      "flex",
-              alignItems:   "center",
-              gap:          10,
+              flex:         "1 1 340px",
+              maxWidth:     520,
+              borderRadius: 20,
+              overflow:     "hidden",
+              boxShadow:    "0 8px 48px rgba(0,0,0,0.10)",
+              border:       "1px solid #E5E7EB",
+              background:   "#F9FAFB",
+              position:     "relative",
             }}>
+              <Image
+                src="/landing-preview.png"
+                alt="Roaddy map preview"
+                width={520}
+                height={360}
+                style={{ width: "100%", height: "auto", display: "block" }}
+              />
               <div style={{
-                width:          32,
-                height:         32,
-                borderRadius:   8,
-                background:     "#FFF7ED",
-                display:        "flex",
-                alignItems:     "center",
-                justifyContent: "center",
-                fontSize:       16,
-              }}>🛣️</div>
-              <div>
-                <div style={{ fontSize: 11, color: "#6B7280" }}>Total Distance</div>
-                <div style={{ fontSize: 15, fontWeight: 700 }}>1,240 miles</div>
-                <div style={{ height: 3, width: 72, background: "#EA580C", borderRadius: 2, marginTop: 3 }} />
+                position:     "absolute",
+                bottom:       16,
+                right:        16,
+                background:   "#fff",
+                borderRadius: 14,
+                padding:      "10px 14px",
+                boxShadow:    "0 4px 16px rgba(0,0,0,0.12)",
+                display:      "flex",
+                alignItems:   "center",
+                gap:          10,
+              }}>
+                <div style={{
+                  width:          32,
+                  height:         32,
+                  borderRadius:   8,
+                  background:     "#FFF7ED",
+                  display:        "flex",
+                  alignItems:     "center",
+                  justifyContent: "center",
+                  fontSize:       16,
+                }}>🛣️</div>
+                <div>
+                  <div style={{ fontSize: 11, color: "#6B7280" }}>Total Distance</div>
+                  <div style={{ fontSize: 15, fontWeight: 700 }}>1,240 miles</div>
+                  <div style={{ height: 3, width: 72, background: "#EA580C", borderRadius: 2, marginTop: 3 }} />
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 
       {/* ── Start Planning form ── */}
-      <section id="start-form" style={{ padding: "96px 64px", background: "#F9FAFB" }}>
+      <section id="start-form" style={{ padding: isMobile ? "48px 20px" : "96px 64px", background: "#F9FAFB" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <p style={{ color: "#EA580C", fontWeight: 600, fontSize: 14, marginBottom: 8, textAlign: "center" }}>GET STARTED</p>
           <h2 style={{ fontSize: "clamp(22px, 3vw, 34px)", fontWeight: 800, textAlign: "center", marginBottom: 48 }}>
@@ -347,13 +360,18 @@ export default function LandingPage() {
             background:   "#fff",
             borderRadius: 16,
             boxShadow:    "0 4px 32px rgba(0,0,0,0.08)",
-            padding:      "40px 48px",
+            padding:      isMobile ? "24px 20px" : "40px 48px",
             maxWidth:     640,
             margin:       "0 auto",
           }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              {/* Trip name + Starting city — stack on mobile */}
+              <div style={{
+                display:             "grid",
+                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+                gap:                 12,
+              }}>
                 <label style={labelStyle}>
                   🚗 Trip name
                   <input
@@ -428,12 +446,17 @@ export default function LandingPage() {
                 </label>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              {/* Start date + End date — stack on mobile */}
+              <div style={{
+                display:             "grid",
+                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+                gap:                 12,
+              }}>
                 <label style={labelStyle}>
                   📅 Start date
                   <input
                     type="date"
-                    style={inputStyle}
+                    style={Object.assign({}, inputStyle, { width: "100%" })}
                     value={startDate}
                     onChange={e => { setStartDate(e.target.value); setError(""); }}
                   />
@@ -442,7 +465,7 @@ export default function LandingPage() {
                   📅 End date
                   <input
                     type="date"
-                    style={inputStyle}
+                    style={Object.assign({}, inputStyle, { width: "100%" })}
                     value={endDate}
                     onChange={e => { setEndDate(e.target.value); setError(""); }}
                   />
@@ -477,7 +500,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── How it works ── */}
-      <section style={{ padding: "96px 64px", background: "#fff", textAlign: "center" }}>
+      <section style={{ padding: isMobile ? "48px 20px" : "96px 64px", background: "#fff", textAlign: "center" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <p style={{ color: "#EA580C", fontWeight: 600, fontSize: 14, marginBottom: 8 }}>HOW IT WORKS</p>
           <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, marginBottom: 16 }}>
@@ -512,7 +535,7 @@ export default function LandingPage() {
       {/* ── CTA ── */}
       <section style={{
         background: "#EA580C",
-        padding:    "96px 64px",
+        padding:    isMobile ? "48px 20px" : "96px 64px",
         textAlign:  "center",
         color:      "#fff",
       }}>
@@ -544,13 +567,15 @@ export default function LandingPage() {
       <footer style={{
         background:     "#111827",
         color:          "#9CA3AF",
-        padding:        "32px 48px",
+        padding:        isMobile ? "24px 20px" : "32px 48px",
         display:        "flex",
         alignItems:     "center",
-        justifyContent: "space-between",
+        justifyContent: isMobile ? "center" : "space-between",
+        flexDirection:  isMobile ? "column" : "row",
         flexWrap:       "wrap",
         gap:            12,
         fontSize:       13,
+        textAlign:      isMobile ? "center" : "left",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <Image src="/icon0.svg" alt="Roaddy" width={20} height={20} />
