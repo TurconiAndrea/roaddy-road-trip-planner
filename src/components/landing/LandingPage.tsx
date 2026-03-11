@@ -143,6 +143,34 @@ export default function LandingPage() {
   return (
     <div style={{ fontFamily: "var(--font-sans, sans-serif)", color: "#111827" }}>
 
+      {/* ── Floating Buy Me a Coffee ── */}
+      <a
+        href="https://ko-fi.com/andreaturconi"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          position:     "fixed",
+          bottom:       24,
+          right:        24,
+          zIndex:       1000,
+          boxShadow:    "0 4px 20px rgba(0,0,0,0.15)",
+          borderRadius: 12,
+          overflow:     "hidden",
+          display:      "block",
+          transition:   "transform 0.15s",
+        }}
+        onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.05)")}
+        onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
+      >
+        <img
+          src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
+          alt="Buy Me A Coffee"
+          width={150}
+          height={42}
+          style={{ display: "block" }}
+        />
+      </a>
+
       {/* ── Navbar ── */}
       <nav style={{
         display:        "flex",
@@ -219,7 +247,7 @@ export default function LandingPage() {
               by day, and instantly see your route on an interactive map. No spreadsheets required.
             </p>
 
-            <div style={{ display: "flex", gap: 20 }}>
+            <div style={{ display: "flex", gap: 20, marginBottom: 24 }}>
               {["No credit card required", "Free forever plan"].map(t => (
                 <span key={t} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#6B7280" }}>
                   <span style={{
@@ -237,6 +265,23 @@ export default function LandingPage() {
                   {t}
                 </span>
               ))}
+            </div>
+
+            {/* ── Product Hunt Badge ── */}
+            <div style={{ marginTop: 8 }}>
+              <a
+                href="https://www.producthunt.com/products/roaddy-road-trip-planner?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-roaddy-road-trip-planner"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  alt="Roaddy — Road Trip Planner - Plan and visualize multi-day road trips on a map | Product Hunt"
+                  src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1095348&theme=light&t=1773236644583"
+                  width={250}
+                  height={54}
+                  style={{ display: "block" }}
+                />
+              </a>
             </div>
           </div>
 
@@ -512,14 +557,6 @@ export default function LandingPage() {
           <span style={{ color: "#fff", fontWeight: 600 }}>Roaddy</span>
         </div>
         <span>© {new Date().getFullYear()} Roaddy. MIT License.</span>
-        <a
-          href="https://buymeacoffee.com/YOUR_USERNAME"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: "#FBBF24", textDecoration: "none", fontWeight: 600 }}
-        >
-          ☕ Buy me a coffee
-        </a>
       </footer>
 
     </div>
