@@ -2,10 +2,14 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 import { useTripStore } from "@/store/tripStore";
 import { geocodeSearch } from "@/lib/geocoding";
 import type { TripMeta, GeocodingResult } from "@/types/trip";
+import Navbar from "@/components/navigation/Navbar";
+import Footer from "@/components/navigation/Footer";
+import { useLanguageStore } from "@/store/languageStore";
 
 if (typeof document !== "undefined") {
   const style = document.createElement("style");
@@ -75,6 +79,7 @@ const inputStyle: React.CSSProperties = {
 export default function LandingPage() {
   const router     = useRouter();
   const createTrip = useTripStore(s => s.createTrip);
+  const lang       = useLanguageStore(s => s.lang);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -183,38 +188,7 @@ export default function LandingPage() {
       </a>
 
       {/* ── Navbar ── */}
-      <nav style={{
-        display:        "flex",
-        alignItems:     "center",
-        justifyContent: "space-between",
-        padding:        isMobile ? "0 20px" : "0 48px",
-        height:         64,
-        borderBottom:   "1px solid #F3F4F6",
-        background:     "#fff",
-        position:       "sticky",
-        top:            0,
-        zIndex:         100,
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Image src="/icon0.svg" alt="Roaddy" width={28} height={28} />
-          <span style={{ fontWeight: 700, fontSize: 16 }}>Roaddy</span>
-        </div>
-        <button
-          onClick={() => document.getElementById("start-form")?.scrollIntoView({ behavior: "smooth" })}
-          style={{
-            background:   "#EA580C",
-            color:        "#fff",
-            border:       "none",
-            borderRadius: 8,
-            padding:      "8px 20px",
-            fontWeight:   600,
-            fontSize:     14,
-            cursor:       "pointer",
-          }}
-        >
-          Start Planning
-        </button>
-      </nav>
+      <Navbar />
 
       {/* ── Hero: title + image ── */}
       <section style={{
@@ -543,7 +517,7 @@ export default function LandingPage() {
           Your next adventure begins here
         </h2>
         <p style={{ fontSize: 16, opacity: 0.85, maxWidth: 480, margin: "0 auto 32px", lineHeight: 1.7 }}>
-          Enter a few details about your journey and in seconds you'll be inside the
+          Enter a few details about your journey and in seconds you&apos;ll be inside the
           planner with your trip ready to go.
         </p>
         <button
@@ -563,26 +537,111 @@ export default function LandingPage() {
         </button>
       </section>
 
-      {/* ── Footer ── */}
-      <footer style={{
-        background:     "#111827",
-        color:          "#9CA3AF",
-        padding:        isMobile ? "24px 20px" : "32px 48px",
-        display:        "flex",
-        alignItems:     "center",
-        justifyContent: isMobile ? "center" : "space-between",
-        flexDirection:  isMobile ? "column" : "row",
-        flexWrap:       "wrap",
-        gap:            12,
-        fontSize:       13,
-        textAlign:      isMobile ? "center" : "left",
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <Image src="/icon0.svg" alt="Roaddy" width={20} height={20} />
-          <span style={{ color: "#fff", fontWeight: 600 }}>Roaddy</span>
+      {/* ── Travel Guides Featured Teaser Section ── */}
+      <section style={{ padding: isMobile ? "48px 20px" : "96px 64px", background: "#FFF7ED", borderTop: "1px solid #FFEDD5" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+          <div style={{
+            display: "flex",
+            flexDirection: isMobile ? "column" : "row",
+            alignItems: "center",
+            gap: 48,
+          }}>
+            <div style={{ flex: "1 1 500px" }}>
+              <span style={{
+                background: "#EA580C",
+                color: "#fff",
+                fontSize: 12,
+                fontWeight: 800,
+                padding: "6px 14px",
+                borderRadius: 20,
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
+              }}>
+                📖 TRAVEL GUIDES
+              </span>
+              <h2 style={{ fontSize: "clamp(26px, 3.5vw, 40px)", fontWeight: 800, color: "#111827", marginTop: 16, marginBottom: 16, lineHeight: 1.2 }}>
+                {lang === "it"
+                  ? "Scopri le nostre guide Road Trip editoriali"
+                  : "Discover our editorial Road Trip guides"}
+              </h2>
+              <p style={{ fontSize: 16, color: "#4B5563", lineHeight: 1.7, marginBottom: 24 }}>
+                {lang === "it"
+                  ? "Abbiamo racchiuso i migliori itinerari on the road in guide dettagliate giorno per giorno, con consigli sugli alloggi provati, tappe panoramiche e mappe pronte."
+                  : "We've distilled the world's finest road trip routes into day-by-day travel guides with tested accommodation tips, scenic overlooks, and ready-to-use maps."}
+              </p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
+                <Link
+                  href="/guides/usa-west-coast-18-days"
+                  style={{
+                    background: "#EA580C",
+                    color: "#fff",
+                    borderRadius: 10,
+                    padding: "12px 24px",
+                    fontWeight: 700,
+                    fontSize: 15,
+                    textDecoration: "none",
+                    boxShadow: "0 4px 16px rgba(234, 88, 12, 0.25)",
+                  }}
+                >
+                  🇺🇸 {lang === "it" ? "Guida USA West Coast (18 Giorni) →" : "USA West Coast Guide (18 Days) →"}
+                </Link>
+                <Link
+                  href="/guides"
+                  style={{
+                    background: "#fff",
+                    color: "#374151",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 10,
+                    padding: "12px 20px",
+                    fontWeight: 600,
+                    fontSize: 15,
+                    textDecoration: "none",
+                  }}
+                >
+                  {lang === "it" ? "Tutte le Guide" : "All Travel Guides"}
+                </Link>
+              </div>
+            </div>
+
+            <div style={{
+              flex: "1 1 400px",
+              borderRadius: 20,
+              overflow: "hidden",
+              boxShadow: "0 12px 36px rgba(0,0,0,0.1)",
+              border: "1px solid #E5E7EB",
+              position: "relative",
+              height: 320,
+              width: "100%",
+            }}>
+              <Image
+                src="/guides/usa-west-coast.png"
+                alt="USA West Coast Road Trip"
+                fill
+                style={{ objectFit: "cover" }}
+              />
+              <div style={{
+                position: "absolute",
+                inset: 0,
+                background: "linear-gradient(180deg, transparent 40%, rgba(17,24,39,0.85) 100%)",
+              }} />
+              <div style={{
+                position: "absolute",
+                bottom: 20,
+                left: 20,
+                right: 20,
+                color: "#fff",
+              }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#F97316" }}>FEATURED GUIDE</div>
+                <div style={{ fontSize: 20, fontWeight: 800 }}>USA on the Road: 18 {lang === "it" ? "Giorni" : "Days"}</div>
+                <div style={{ fontSize: 13, opacity: 0.9 }}>California, National Parks & Wild West · 4,160 km</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <span>© {new Date().getFullYear()} Roaddy. MIT License.</span>
-      </footer>
+      </section>
+
+      {/* ── Footer ── */}
+      <Footer />
 
     </div>
   );
