@@ -34,7 +34,7 @@ export default function Footer() {
         >
           {/* Brand Info */}
           <div style={{ maxWidth: 360 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+            <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12, textDecoration: "none" }}>
               <div
                 style={{
                   width: 30,
@@ -51,7 +51,7 @@ export default function Footer() {
               <span style={{ color: "#fff", fontWeight: 800, fontSize: 18, letterSpacing: "-0.03em" }}>
                 Roaddy
               </span>
-            </div>
+            </Link>
             <p style={{ color: "#9CA3AF", lineHeight: 1.6, fontSize: 13 }}>
               Il tuo compagno ideale per pianificare road trip indimenticabili. Mappe interattive,
               guide editoriali curate nei minimi dettagli e itinerari pronti da vivere.

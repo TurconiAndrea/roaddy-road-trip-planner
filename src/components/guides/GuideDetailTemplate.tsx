@@ -122,22 +122,32 @@ export default function GuideDetailTemplate({ guide }: GuideDetailTemplateProps)
           }}
         >
           {/* Breadcrumb */}
-          <div
+          <nav
+            aria-label="Breadcrumb"
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
               fontSize: 13,
               color: "#9CA3AF",
               marginBottom: 24,
             }}
           >
-            <Link href="/guides" style={{ color: "#9CA3AF", textDecoration: "none" }}>
-              {lang === "it" ? "Guide di Viaggio" : "Travel Guides"}
-            </Link>
-            <span>/</span>
-            <span style={{ color: "#FFF" }}>{titleStr}</span>
-          </div>
+            <ol style={{ display: "flex", alignItems: "center", gap: 8, listStyle: "none", margin: 0, padding: 0 }}>
+              <li>
+                <Link href="/" style={{ color: "#9CA3AF", textDecoration: "none" }}>
+                  Home
+                </Link>
+              </li>
+              <li>/</li>
+              <li>
+                <Link href="/guides" style={{ color: "#9CA3AF", textDecoration: "none" }}>
+                  {lang === "it" ? "Guide di Viaggio" : "Travel Guides"}
+                </Link>
+              </li>
+              <li>/</li>
+              <li aria-current="page" style={{ color: "#FFF", fontWeight: 600 }}>
+                {titleStr}
+              </li>
+            </ol>
+          </nav>
 
           {/* Badges */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 20 }}>

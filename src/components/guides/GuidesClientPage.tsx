@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import Navbar from "@/components/navigation/Navbar";
 import Footer from "@/components/navigation/Footer";
 import GuidesHero from "@/components/guides/GuidesHero";
@@ -27,6 +28,32 @@ export default function GuidesClientPage() {
       <Navbar />
 
       <main id="main-content" style={{ flex: 1 }}>
+        {/* Visible Accessible Breadcrumb Navigation */}
+        <nav
+          aria-label="Breadcrumb"
+          style={{
+            maxWidth: 1150,
+            margin: "0 auto",
+            width: "100%",
+            padding: isMobile ? "16px 20px 0" : "20px 48px 0",
+            boxSizing: "border-box",
+            fontSize: 13,
+            color: "#6B7280",
+          }}
+        >
+          <ol style={{ display: "flex", alignItems: "center", gap: 8, listStyle: "none", margin: 0, padding: 0 }}>
+            <li>
+              <Link href="/" style={{ color: "#EA580C", textDecoration: "none", fontWeight: 500 }}>
+                Home
+              </Link>
+            </li>
+            <li>/</li>
+            <li aria-current="page" style={{ color: "#374151", fontWeight: 600 }}>
+              {lang === "it" ? "Guide di Viaggio" : "Travel Guides"}
+            </li>
+          </ol>
+        </nav>
+
         {/* Hero Section */}
         <GuidesHero isMobile={isMobile} />
 

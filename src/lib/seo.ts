@@ -13,10 +13,14 @@ export function getSiteUrl(): string {
 
 /**
  * Returns an absolute URL for a relative path.
+ * Homepage returns siteUrl + "/". Subpaths return siteUrl + "/path" without trailing slash.
  */
 export function getAbsoluteUrl(path: string = ""): string {
+  if (path === "/" || path === "") {
+    return `${getSiteUrl()}/`;
+  }
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
-  return `${getSiteUrl()}${cleanPath}`;
+  return `${getSiteUrl()}${cleanPath.replace(/\/+$/, "")}`;
 }
 
 /**
@@ -30,7 +34,6 @@ export function generateOrganizationSchema() {
     name: "Roaddy",
     url: siteUrl,
     logo: getAbsoluteUrl("/icon0.svg"),
-    description: "Plan your perfect road trip with an interactive map, stops organization, and curated travel guides.",
   };
 }
 
@@ -60,35 +63,12 @@ export function generateWebApplicationSchema() {
     url: siteUrl,
     applicationCategory: "TravelApplication",
     operatingSystem: "All",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
-    },
-    description: "Free interactive road trip planner. Add stops, organize your itinerary by day, and visualize your route on a map without registering an account.",
-  };
-}
-
-/**
- * JSON-LD Schema: FAQPage
- */
-export function generateFAQSchema(faqs: { question: string; answer: string }[]) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map((faq) => ({
-      "@type": "Question",
-      name: faq.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: faq.answer,
-      },
-    })),
   };
 }
 
 /**
  * JSON-LD Schema: BreadcrumbList
+ * Matches the visible HTML breadcrumbs on /guides and /guides/[slug].
  */
 export function generateBreadcrumbSchema(items: { name: string; item: string }[]) {
   return {
@@ -121,11 +101,6 @@ export function generateArticleSchema(guide: TravelGuide) {
     description: description,
     url: guideUrl,
     image: imageUrl,
-    author: {
-      "@type": "Organization",
-      name: "Roaddy Editorial Team",
-      url: getSiteUrl(),
-    },
     publisher: {
       "@type": "Organization",
       name: "Roaddy",

@@ -5,7 +5,6 @@ import {
   generateOrganizationSchema,
   generateWebSiteSchema,
   generateWebApplicationSchema,
-  generateFAQSchema,
 } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -40,30 +39,10 @@ export const metadata: Metadata = {
   },
 };
 
-const HOMEPAGE_FAQS = [
-  {
-    question: "Is Roaddy completely free to use?",
-    answer: "Yes, Roaddy is 100% free to use and requires no credit card or account registration to plan your trips.",
-  },
-  {
-    question: "Do I need an account to plan a road trip?",
-    answer: "No account is required. You can start creating your trip itinerary right away, and your progress is saved locally in your web browser.",
-  },
-  {
-    question: "How does Roaddy help plan multi-stop road trips?",
-    answer: "Roaddy provides an interactive map where you can search destinations, add intermediate stops, organize your trip day by day, and reorder stops easily.",
-  },
-  {
-    question: "Does Roaddy provide curated travel guides?",
-    answer: "Yes, Roaddy includes editorial travel guides with detailed day-by-day itineraries, driving distances, national park highlights, and practical tips.",
-  },
-];
-
 export default function HomePage() {
   const orgSchema = generateOrganizationSchema();
   const websiteSchema = generateWebSiteSchema();
   const webAppSchema = generateWebApplicationSchema();
-  const faqSchema = generateFAQSchema(HOMEPAGE_FAQS);
 
   return (
     <>
@@ -78,10 +57,6 @@ export default function HomePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <HomeClientWrapper />
     </>
