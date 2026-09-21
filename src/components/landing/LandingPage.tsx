@@ -10,6 +10,7 @@ import type { TripMeta, GeocodingResult } from "@/types/trip";
 import Navbar from "@/components/navigation/Navbar";
 import Footer from "@/components/navigation/Footer";
 import { useLanguageStore } from "@/store/languageStore";
+import { AnalyticsEvents } from "@/lib/analytics";
 
 if (typeof document !== "undefined") {
   const style = document.createElement("style");
@@ -52,6 +53,25 @@ const FEATURES = [
     icon:  "📱",
     title: "Plan Anywhere",
     desc:  "A responsive design means the planner works just as smoothly on your phone.",
+  },
+];
+
+const HOMEPAGE_FAQS = [
+  {
+    question: "Is Roaddy completely free to use?",
+    answer: "Yes, Roaddy is 100% free to use and requires no credit card or account registration to plan your trips.",
+  },
+  {
+    question: "Do I need an account to plan a road trip?",
+    answer: "No account is required. You can start creating your trip itinerary right away, and your progress is saved locally in your web browser.",
+  },
+  {
+    question: "How does Roaddy help plan multi-stop road trips?",
+    answer: "Roaddy provides an interactive map where you can search destinations, add intermediate stops, organize your trip day by day, and reorder stops easily.",
+  },
+  {
+    question: "Does Roaddy provide curated travel guides?",
+    answer: "Yes, Roaddy includes editorial travel guides with detailed day-by-day itineraries, driving distances, national park highlights, and practical tips.",
   },
 ];
 
@@ -132,6 +152,8 @@ export default function LandingPage() {
     const end   = new Date(endDate);
     const days  = Math.max(1, Math.round((end.getTime() - start.getTime()) / 86400000) + 1);
 
+    AnalyticsEvents.createTrip(days);
+
     const meta: TripMeta = {
       title:     title.trim(),
       startCity: startCityResult
@@ -164,6 +186,7 @@ export default function LandingPage() {
         href="https://ko-fi.com/andreaturconi"
         target="_blank"
         rel="noopener noreferrer"
+        aria-label="Support Roaddy on Ko-fi"
         style={{
           position:     "fixed",
           bottom:       isMobile ? 16 : 24,
@@ -190,455 +213,493 @@ export default function LandingPage() {
       {/* ── Navbar ── */}
       <Navbar />
 
-      {/* ── Hero: title + image ── */}
-      <section style={{
-        padding:    isMobile ? "48px 20px" : "96px 64px",
-        background: "linear-gradient(160deg, #FFF7ED 0%, #fff 60%)",
-      }}>
-        <div style={{
-          display:        "flex",
-          alignItems:     "flex-start",
-          justifyContent: "center",
-          gap:            48,
-          flexWrap:       "wrap",
-          maxWidth:       1100,
-          margin:         "0 auto",
+      <main id="main-content">
+        {/* ── Hero: title + image ── */}
+        <section style={{
+          padding:    isMobile ? "48px 20px" : "96px 64px",
+          background: "linear-gradient(160deg, #FFF7ED 0%, #fff 60%)",
         }}>
+          <div style={{
+            display:        "flex",
+            alignItems:     "flex-start",
+            justifyContent: "center",
+            gap:            48,
+            flexWrap:       "wrap",
+            maxWidth:       1100,
+            margin:         "0 auto",
+          }}>
 
-          {/* Left: text */}
-          <div style={{ flex: "1 1 340px", maxWidth: 520 }}>
-            <div style={{
-              display:      "inline-flex",
-              alignItems:   "center",
-              gap:          6,
-              background:   "#FFF7ED",
-              color:        "#EA580C",
-              borderRadius: 20,
-              padding:      "4px 14px",
-              fontSize:     13,
-              fontWeight:   600,
-              marginBottom: 24,
-            }}>
-              🚗 Free forever · No account needed
+            {/* Left: text */}
+            <div style={{ flex: "1 1 340px", maxWidth: 520 }}>
+              <div style={{
+                display:      "inline-flex",
+                alignItems:   "center",
+                gap:          6,
+                background:   "#FFF7ED",
+                color:        "#EA580C",
+                borderRadius: 20,
+                padding:      "4px 14px",
+                fontSize:     13,
+                fontWeight:   600,
+                marginBottom: 24,
+              }}>
+                🚗 Free forever · No account needed
+              </div>
+
+              <h1 style={{ fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 800, lineHeight: 1.15, marginBottom: 16 }}>
+                Plan your perfect road trip{" "}
+                <span style={{ color: "#EA580C" }}>with ease</span>
+              </h1>
+
+              <p style={{ fontSize: 17, color: "#6B7280", lineHeight: 1.7, marginBottom: 24 }}>
+                Turn a list of destinations into a clear, visual journey. Add stops, organize
+                by day, and instantly see your route on an interactive map. No spreadsheets required.
+              </p>
+
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginBottom: 24 }}>
+                {["No credit card required", "Free forever plan"].map(t => (
+                  <span key={t} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#6B7280" }}>
+                    <span style={{
+                      width:          18,
+                      height:         18,
+                      borderRadius:   "50%",
+                      background:     "#EA580C",
+                      display:        "flex",
+                      alignItems:     "center",
+                      justifyContent: "center",
+                      color:          "#fff",
+                      fontSize:       11,
+                      flexShrink:     0,
+                    }}>✓</span>
+                    {t}
+                  </span>
+                ))}
+              </div>
+
+              {/* ── Product Hunt Badge ── */}
+              <div style={{ marginTop: 8 }}>
+                <a
+                  href="https://www.producthunt.com/products/roaddy-road-trip-planner?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-roaddy-road-trip-planner"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    alt="Roaddy — Road Trip Planner - Plan and visualize multi-day road trips on a map | Product Hunt"
+                    src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1095348&theme=light&t=1773236644583"
+                    width={250}
+                    height={54}
+                    style={{ display: "block", maxWidth: "100%" }}
+                  />
+                </a>
+              </div>
             </div>
 
-            <h1 style={{ fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 800, lineHeight: 1.15, marginBottom: 16 }}>
-              Plan your perfect road trip{" "}
-              <span style={{ color: "#EA580C" }}>with ease</span>
-            </h1>
-
-            <p style={{ fontSize: 17, color: "#6B7280", lineHeight: 1.7, marginBottom: 24 }}>
-              Turn a list of destinations into a clear, visual journey. Add stops, organize
-              by day, and instantly see your route on an interactive map. No spreadsheets required.
-            </p>
-
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginBottom: 24 }}>
-              {["No credit card required", "Free forever plan"].map(t => (
-                <span key={t} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#6B7280" }}>
-                  <span style={{
-                    width:          18,
-                    height:         18,
-                    borderRadius:   "50%",
-                    background:     "#EA580C",
+            {/* Right: map preview — hidden on mobile */}
+            {!isMobile && (
+              <div style={{
+                flex:         "1 1 340px",
+                maxWidth:     520,
+                borderRadius: 20,
+                overflow:     "hidden",
+                boxShadow:    "0 8px 48px rgba(0,0,0,0.10)",
+                border:       "1px solid #E5E7EB",
+                background:   "#F9FAFB",
+                position:     "relative",
+              }}>
+                <Image
+                  src="/landing-preview.png"
+                  alt="Roaddy interactive road trip map preview showing route visualization and stops"
+                  width={520}
+                  height={360}
+                  priority
+                  style={{ width: "100%", height: "auto", display: "block" }}
+                />
+                <div style={{
+                  position:     "absolute",
+                  bottom:       16,
+                  right:        16,
+                  background:   "#fff",
+                  borderRadius: 14,
+                  padding:      "10px 14px",
+                  boxShadow:    "0 4px 16px rgba(0,0,0,0.12)",
+                  display:      "flex",
+                  alignItems:   "center",
+                  gap:          10,
+                }}>
+                  <div style={{
+                    width:          32,
+                    height:         32,
+                    borderRadius:   8,
+                    background:     "#FFF7ED",
                     display:        "flex",
                     alignItems:     "center",
                     justifyContent: "center",
-                    color:          "#fff",
-                    fontSize:       11,
-                    flexShrink:     0,
-                  }}>✓</span>
-                  {t}
-                </span>
-              ))}
-            </div>
+                    fontSize:       16,
+                  }}>🛣️</div>
+                  <div>
+                    <div style={{ fontSize: 11, color: "#6B7280" }}>Total Distance</div>
+                    <div style={{ fontSize: 15, fontWeight: 700 }}>1,240 miles</div>
+                    <div style={{ height: 3, width: 72, background: "#EA580C", borderRadius: 2, marginTop: 3 }} />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
 
-            {/* ── Product Hunt Badge ── */}
-            <div style={{ marginTop: 8 }}>
-              <a
-                href="https://www.producthunt.com/products/roaddy-road-trip-planner?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-roaddy-road-trip-planner"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  alt="Roaddy — Road Trip Planner - Plan and visualize multi-day road trips on a map | Product Hunt"
-                  src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1095348&theme=light&t=1773236644583"
-                  width={250}
-                  height={54}
-                  style={{ display: "block", maxWidth: "100%" }}
-                />
-              </a>
+        {/* ── Start Planning form ── */}
+        <section id="start-form" style={{ padding: isMobile ? "48px 20px" : "96px 64px", background: "#F9FAFB" }}>
+          <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+            <p style={{ color: "#EA580C", fontWeight: 600, fontSize: 14, marginBottom: 8, textAlign: "center" }}>GET STARTED</p>
+            <h2 style={{ fontSize: "clamp(22px, 3vw, 34px)", fontWeight: 800, textAlign: "center", marginBottom: 48 }}>
+              Start Planning Your Trip
+            </h2>
+
+            <div style={{
+              background:   "#fff",
+              borderRadius: 16,
+              boxShadow:    "0 4px 32px rgba(0,0,0,0.08)",
+              padding:      isMobile ? "24px 20px" : "40px 48px",
+              maxWidth:     640,
+              margin:       "0 auto",
+            }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+
+                {/* Trip name + Starting city — stack on mobile */}
+                <div style={{
+                  display:             "grid",
+                  gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+                  gap:                 12,
+                }}>
+                  <label style={labelStyle}>
+                    🚗 Trip name
+                    <input
+                      style={inputStyle}
+                      placeholder="e.g. Pacific Coast Highway"
+                      value={title}
+                      onChange={e => { setTitle(e.target.value); setError(""); }}
+                    />
+                  </label>
+
+                  <label style={labelStyle}>
+                    📍 Starting city
+                    <div style={{ position: "relative" }}>
+                      <input
+                        style={{ ...inputStyle, paddingRight: cityLoading ? 36 : 12 }}
+                        placeholder="e.g. San Francisco, CA"
+                        value={startCity}
+                        onChange={handleCityInput}
+                        onBlur={() => setTimeout(() => setCitySuggestions([]), 200)}
+                        autoComplete="off"
+                      />
+                      {cityLoading && (
+                        <div style={{
+                          position:     "absolute",
+                          right:        10,
+                          top:          "50%",
+                          transform:    "translateY(-50%)",
+                          width:        14,
+                          height:       14,
+                          border:       "2px solid #E5E7EB",
+                          borderTop:    "2px solid #EA580C",
+                          borderRadius: "50%",
+                          animation:    "spin 0.6s linear infinite",
+                        }} />
+                      )}
+                      {citySuggestions.length > 0 && (
+                        <div style={{
+                          position:     "absolute",
+                          top:          "calc(100% + 4px)",
+                          left:         0,
+                          right:        0,
+                          background:   "#fff",
+                          border:       "1px solid #E5E7EB",
+                          borderRadius: 10,
+                          boxShadow:    "0 4px 16px rgba(0,0,0,0.10)",
+                          zIndex:       9999,
+                          overflow:     "hidden",
+                        }}>
+                          {citySuggestions.slice(0, 6).map((res, i) => (
+                            <div
+                              key={i}
+                              onMouseDown={() => handleCitySelect(res)}
+                              style={{
+                                padding:      "10px 14px",
+                                fontSize:     13,
+                                cursor:       "pointer",
+                                display:      "flex",
+                                alignItems:   "center",
+                                gap:          8,
+                                borderBottom: i < 5 ? "1px solid #F3F4F6" : "none",
+                              }}
+                              onMouseEnter={e => (e.currentTarget.style.background = "#FFF7ED")}
+                              onMouseLeave={e => (e.currentTarget.style.background = "#fff")}
+                            >
+                              <span>📍</span>
+                              <span style={{ color: "#374151" }}>{res.display_name}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </label>
+                </div>
+
+                {/* Start date + End date — stack on mobile */}
+                <div style={{
+                  display:             "grid",
+                  gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+                  gap:                 12,
+                }}>
+                  <label style={labelStyle}>
+                    📅 Start date
+                    <input
+                      type="date"
+                      style={Object.assign({}, inputStyle, { width: "100%" })}
+                      value={startDate}
+                      onChange={e => { setStartDate(e.target.value); setError(""); }}
+                    />
+                  </label>
+                  <label style={labelStyle}>
+                    📅 End date
+                    <input
+                      type="date"
+                      style={Object.assign({}, inputStyle, { width: "100%" })}
+                      value={endDate}
+                      onChange={e => { setEndDate(e.target.value); setError(""); }}
+                    />
+                  </label>
+                </div>
+
+                {error && (
+                  <p style={{ color: "#EF4444", fontSize: 13, margin: 0 }}>{error}</p>
+                )}
+
+                <button
+                  onClick={handleStart}
+                  style={{
+                    background:   "#EA580C",
+                    color:        "#fff",
+                    border:       "none",
+                    borderRadius: 10,
+                    padding:      "13px",
+                    fontWeight:   700,
+                    fontSize:     15,
+                    cursor:       "pointer",
+                    transition:   "background 0.15s",
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.background = "#C2410C")}
+                  onMouseLeave={e => (e.currentTarget.style.background = "#EA580C")}
+                >
+                  Start Planning →
+                </button>
+              </div>
             </div>
           </div>
+        </section>
 
-          {/* Right: map preview — hidden on mobile */}
-          {!isMobile && (
+        {/* ── How it works ── */}
+        <section style={{ padding: isMobile ? "48px 20px" : "96px 64px", background: "#fff", textAlign: "center" }}>
+          <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+            <p style={{ color: "#EA580C", fontWeight: 600, fontSize: 14, marginBottom: 8 }}>HOW IT WORKS</p>
+            <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, marginBottom: 16 }}>
+              Design your journey, step by step
+            </h2>
+            <p style={{ color: "#6B7280", maxWidth: 560, margin: "0 auto 56px", lineHeight: 1.7 }}>
+              Planning a road trip should be exciting, not complicated. Roaddy gives you a clean
+              workspace where you can build your itinerary exactly the way you imagine it.
+            </p>
+
             <div style={{
-              flex:         "1 1 340px",
-              maxWidth:     520,
-              borderRadius: 20,
-              overflow:     "hidden",
-              boxShadow:    "0 8px 48px rgba(0,0,0,0.10)",
-              border:       "1px solid #E5E7EB",
-              background:   "#F9FAFB",
-              position:     "relative",
+              display:             "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap:                 24,
             }}>
-              <Image
-                src="/landing-preview.png"
-                alt="Roaddy map preview"
-                width={520}
-                height={360}
-                style={{ width: "100%", height: "auto", display: "block" }}
-              />
+              {FEATURES.map(({ icon, title, desc }) => (
+                <div key={title} style={{
+                  background:   "#F9FAFB",
+                  borderRadius: 14,
+                  padding:      "32px 28px",
+                  textAlign:    "left",
+                }}>
+                  <div style={{ fontSize: 28, marginBottom: 12 }}>{icon}</div>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 8 }}>{title}</h3>
+                  <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.6, margin: 0 }}>{desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── FAQ Section (Semantic & Visually Accessible) ── */}
+        <section style={{ padding: isMobile ? "48px 20px" : "80px 64px", background: "#F9FAFB", borderTop: "1px solid #E5E7EB" }}>
+          <div style={{ maxWidth: 860, margin: "0 auto" }}>
+            <p style={{ color: "#EA580C", fontWeight: 600, fontSize: 14, marginBottom: 8, textAlign: "center" }}>FREQUENTLY ASKED QUESTIONS</p>
+            <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, textAlign: "center", marginBottom: 40 }}>
+              Everything you need to know about Roaddy
+            </h2>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              {HOMEPAGE_FAQS.map((faq) => (
+                <div
+                  key={faq.question}
+                  style={{
+                    background: "#fff",
+                    borderRadius: 12,
+                    padding: "24px 28px",
+                    border: "1px solid #E5E7EB",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+                  }}
+                >
+                  <h3 style={{ fontSize: 17, fontWeight: 700, color: "#111827", marginBottom: 8 }}>
+                    {faq.question}
+                  </h3>
+                  <p style={{ fontSize: 15, color: "#4B5563", lineHeight: 1.6, margin: 0 }}>
+                    {faq.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── CTA ── */}
+        <section style={{
+          background: "#EA580C",
+          padding:    isMobile ? "48px 20px" : "96px 64px",
+          textAlign:  "center",
+          color:      "#fff",
+        }}>
+          <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, marginBottom: 16 }}>
+            Your next adventure begins here
+          </h2>
+          <p style={{ fontSize: 16, opacity: 0.85, maxWidth: 480, margin: "0 auto 32px", lineHeight: 1.7 }}>
+            Enter a few details about your journey and in seconds you&apos;ll be inside the
+            planner with your trip ready to go.
+          </p>
+          <button
+            onClick={() => {
+              AnalyticsEvents.startPlanningClick();
+              document.getElementById("start-form")?.scrollIntoView({ behavior: "smooth" });
+            }}
+            style={{
+              background:   "#fff",
+              color:        "#EA580C",
+              border:       "none",
+              borderRadius: 10,
+              padding:      "14px 32px",
+              fontWeight:   700,
+              fontSize:     16,
+              cursor:       "pointer",
+            }}
+          >
+            Start Planning for Free →
+          </button>
+        </section>
+
+        {/* ── Travel Guides Featured Teaser Section ── */}
+        <section style={{ padding: isMobile ? "48px 20px" : "96px 64px", background: "#FFF7ED", borderTop: "1px solid #FFEDD5" }}>
+          <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+            <div style={{
+              display: "flex",
+              flexDirection: isMobile ? "column" : "row",
+              alignItems: "center",
+              gap: 48,
+            }}>
+              <div style={{ flex: "1 1 500px" }}>
+                <span style={{
+                  background: "#EA580C",
+                  color: "#fff",
+                  fontSize: 12,
+                  fontWeight: 800,
+                  padding: "6px 14px",
+                  borderRadius: 20,
+                  letterSpacing: "0.05em",
+                  textTransform: "uppercase",
+                }}>
+                  📖 TRAVEL GUIDES
+                </span>
+                <h2 style={{ fontSize: "clamp(26px, 3.5vw, 40px)", fontWeight: 800, color: "#111827", marginTop: 16, marginBottom: 16, lineHeight: 1.2 }}>
+                  {lang === "it"
+                    ? "Scopri le nostre guide Road Trip editoriali"
+                    : "Discover our editorial Road Trip guides"}
+                </h2>
+                <p style={{ fontSize: 16, color: "#4B5563", lineHeight: 1.7, marginBottom: 24 }}>
+                  {lang === "it"
+                    ? "Abbiamo racchiuso i migliori itinerari on the road in guide dettagliate giorno per giorno, con consigli sugli alloggi provati, tappe panoramiche e mappe pronte."
+                    : "We've distilled the world's finest road trip routes into day-by-day travel guides with tested accommodation tips, scenic overlooks, and ready-to-use maps."}
+                </p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
+                  <Link
+                    href="/guides/usa-west-coast-18-days"
+                    style={{
+                      background: "#EA580C",
+                      color: "#fff",
+                      borderRadius: 10,
+                      padding: "12px 24px",
+                      fontWeight: 700,
+                      fontSize: 15,
+                      textDecoration: "none",
+                      boxShadow: "0 4px 16px rgba(234, 88, 12, 0.25)",
+                    }}
+                  >
+                    🇺🇸 {lang === "it" ? "Guida USA West Coast (18 Giorni) →" : "USA West Coast Guide (18 Days) →"}
+                  </Link>
+                  <Link
+                    href="/guides"
+                    style={{
+                      background: "#fff",
+                      color: "#374151",
+                      border: "1px solid #E5E7EB",
+                      borderRadius: 10,
+                      padding: "12px 20px",
+                      fontWeight: 600,
+                      fontSize: 15,
+                      textDecoration: "none",
+                    }}
+                  >
+                    {lang === "it" ? "Tutte le Guide" : "All Travel Guides"}
+                  </Link>
+                </div>
+              </div>
+
               <div style={{
-                position:     "absolute",
-                bottom:       16,
-                right:        16,
-                background:   "#fff",
-                borderRadius: 14,
-                padding:      "10px 14px",
-                boxShadow:    "0 4px 16px rgba(0,0,0,0.12)",
-                display:      "flex",
-                alignItems:   "center",
-                gap:          10,
+                flex: "1 1 400px",
+                borderRadius: 20,
+                overflow: "hidden",
+                boxShadow: "0 12px 36px rgba(0,0,0,0.1)",
+                border: "1px solid #E5E7EB",
+                position: "relative",
+                height: 320,
+                width: "100%",
               }}>
+                <Image
+                  src="/guides/usa-west-coast.png"
+                  alt="USA West Coast Road Trip itinerary preview"
+                  fill
+                  style={{ objectFit: "cover" }}
+                />
                 <div style={{
-                  width:          32,
-                  height:         32,
-                  borderRadius:   8,
-                  background:     "#FFF7ED",
-                  display:        "flex",
-                  alignItems:     "center",
-                  justifyContent: "center",
-                  fontSize:       16,
-                }}>🛣️</div>
-                <div>
-                  <div style={{ fontSize: 11, color: "#6B7280" }}>Total Distance</div>
-                  <div style={{ fontSize: 15, fontWeight: 700 }}>1,240 miles</div>
-                  <div style={{ height: 3, width: 72, background: "#EA580C", borderRadius: 2, marginTop: 3 }} />
+                  position: "absolute",
+                  inset: 0,
+                  background: "linear-gradient(180deg, transparent 40%, rgba(17,24,39,0.85) 100%)",
+                }} />
+                <div style={{
+                  position: "absolute",
+                  bottom: 20,
+                  left: 20,
+                  right: 20,
+                  color: "#fff",
+                }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#F97316" }}>FEATURED GUIDE</div>
+                  <div style={{ fontSize: 20, fontWeight: 800 }}>USA on the Road: 18 {lang === "it" ? "Giorni" : "Days"}</div>
+                  <div style={{ fontSize: 13, opacity: 0.9 }}>California, National Parks & Wild West · 4,160 km</div>
                 </div>
               </div>
             </div>
-          )}
-        </div>
-      </section>
-
-      {/* ── Start Planning form ── */}
-      <section id="start-form" style={{ padding: isMobile ? "48px 20px" : "96px 64px", background: "#F9FAFB" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <p style={{ color: "#EA580C", fontWeight: 600, fontSize: 14, marginBottom: 8, textAlign: "center" }}>GET STARTED</p>
-          <h2 style={{ fontSize: "clamp(22px, 3vw, 34px)", fontWeight: 800, textAlign: "center", marginBottom: 48 }}>
-            Start Planning Your Trip
-          </h2>
-
-          <div style={{
-            background:   "#fff",
-            borderRadius: 16,
-            boxShadow:    "0 4px 32px rgba(0,0,0,0.08)",
-            padding:      isMobile ? "24px 20px" : "40px 48px",
-            maxWidth:     640,
-            margin:       "0 auto",
-          }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-
-              {/* Trip name + Starting city — stack on mobile */}
-              <div style={{
-                display:             "grid",
-                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-                gap:                 12,
-              }}>
-                <label style={labelStyle}>
-                  🚗 Trip name
-                  <input
-                    style={inputStyle}
-                    placeholder="e.g. Pacific Coast Highway"
-                    value={title}
-                    onChange={e => { setTitle(e.target.value); setError(""); }}
-                  />
-                </label>
-
-                <label style={labelStyle}>
-                  📍 Starting city
-                  <div style={{ position: "relative" }}>
-                    <input
-                      style={{ ...inputStyle, paddingRight: cityLoading ? 36 : 12 }}
-                      placeholder="e.g. San Francisco, CA"
-                      value={startCity}
-                      onChange={handleCityInput}
-                      onBlur={() => setTimeout(() => setCitySuggestions([]), 200)}
-                      autoComplete="off"
-                    />
-                    {cityLoading && (
-                      <div style={{
-                        position:     "absolute",
-                        right:        10,
-                        top:          "50%",
-                        transform:    "translateY(-50%)",
-                        width:        14,
-                        height:       14,
-                        border:       "2px solid #E5E7EB",
-                        borderTop:    "2px solid #EA580C",
-                        borderRadius: "50%",
-                        animation:    "spin 0.6s linear infinite",
-                      }} />
-                    )}
-                    {citySuggestions.length > 0 && (
-                      <div style={{
-                        position:     "absolute",
-                        top:          "calc(100% + 4px)",
-                        left:         0,
-                        right:        0,
-                        background:   "#fff",
-                        border:       "1px solid #E5E7EB",
-                        borderRadius: 10,
-                        boxShadow:    "0 4px 16px rgba(0,0,0,0.10)",
-                        zIndex:       9999,
-                        overflow:     "hidden",
-                      }}>
-                        {citySuggestions.slice(0, 6).map((res, i) => (
-                          <div
-                            key={i}
-                            onMouseDown={() => handleCitySelect(res)}
-                            style={{
-                              padding:      "10px 14px",
-                              fontSize:     13,
-                              cursor:       "pointer",
-                              display:      "flex",
-                              alignItems:   "center",
-                              gap:          8,
-                              borderBottom: i < 5 ? "1px solid #F3F4F6" : "none",
-                            }}
-                            onMouseEnter={e => (e.currentTarget.style.background = "#FFF7ED")}
-                            onMouseLeave={e => (e.currentTarget.style.background = "#fff")}
-                          >
-                            <span>📍</span>
-                            <span style={{ color: "#374151" }}>{res.display_name}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </label>
-              </div>
-
-              {/* Start date + End date — stack on mobile */}
-              <div style={{
-                display:             "grid",
-                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-                gap:                 12,
-              }}>
-                <label style={labelStyle}>
-                  📅 Start date
-                  <input
-                    type="date"
-                    style={Object.assign({}, inputStyle, { width: "100%" })}
-                    value={startDate}
-                    onChange={e => { setStartDate(e.target.value); setError(""); }}
-                  />
-                </label>
-                <label style={labelStyle}>
-                  📅 End date
-                  <input
-                    type="date"
-                    style={Object.assign({}, inputStyle, { width: "100%" })}
-                    value={endDate}
-                    onChange={e => { setEndDate(e.target.value); setError(""); }}
-                  />
-                </label>
-              </div>
-
-              {error && (
-                <p style={{ color: "#EF4444", fontSize: 13, margin: 0 }}>{error}</p>
-              )}
-
-              <button
-                onClick={handleStart}
-                style={{
-                  background:   "#EA580C",
-                  color:        "#fff",
-                  border:       "none",
-                  borderRadius: 10,
-                  padding:      "13px",
-                  fontWeight:   700,
-                  fontSize:     15,
-                  cursor:       "pointer",
-                  transition:   "background 0.15s",
-                }}
-                onMouseEnter={e => (e.currentTarget.style.background = "#C2410C")}
-                onMouseLeave={e => (e.currentTarget.style.background = "#EA580C")}
-              >
-                Start Planning →
-              </button>
-            </div>
           </div>
-        </div>
-      </section>
-
-      {/* ── How it works ── */}
-      <section style={{ padding: isMobile ? "48px 20px" : "96px 64px", background: "#fff", textAlign: "center" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <p style={{ color: "#EA580C", fontWeight: 600, fontSize: 14, marginBottom: 8 }}>HOW IT WORKS</p>
-          <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, marginBottom: 16 }}>
-            Design your journey, step by step
-          </h2>
-          <p style={{ color: "#6B7280", maxWidth: 560, margin: "0 auto 56px", lineHeight: 1.7 }}>
-            Planning a road trip should be exciting, not complicated. Roaddy gives you a clean
-            workspace where you can build your itinerary exactly the way you imagine it.
-          </p>
-
-          <div style={{
-            display:             "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap:                 24,
-          }}>
-            {FEATURES.map(({ icon, title, desc }) => (
-              <div key={title} style={{
-                background:   "#F9FAFB",
-                borderRadius: 14,
-                padding:      "32px 28px",
-                textAlign:    "left",
-              }}>
-                <div style={{ fontSize: 28, marginBottom: 12 }}>{icon}</div>
-                <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 8 }}>{title}</h3>
-                <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.6, margin: 0 }}>{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA ── */}
-      <section style={{
-        background: "#EA580C",
-        padding:    isMobile ? "48px 20px" : "96px 64px",
-        textAlign:  "center",
-        color:      "#fff",
-      }}>
-        <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, marginBottom: 16 }}>
-          Your next adventure begins here
-        </h2>
-        <p style={{ fontSize: 16, opacity: 0.85, maxWidth: 480, margin: "0 auto 32px", lineHeight: 1.7 }}>
-          Enter a few details about your journey and in seconds you&apos;ll be inside the
-          planner with your trip ready to go.
-        </p>
-        <button
-          onClick={() => document.getElementById("start-form")?.scrollIntoView({ behavior: "smooth" })}
-          style={{
-            background:   "#fff",
-            color:        "#EA580C",
-            border:       "none",
-            borderRadius: 10,
-            padding:      "14px 32px",
-            fontWeight:   700,
-            fontSize:     16,
-            cursor:       "pointer",
-          }}
-        >
-          Start Planning for Free →
-        </button>
-      </section>
-
-      {/* ── Travel Guides Featured Teaser Section ── */}
-      <section style={{ padding: isMobile ? "48px 20px" : "96px 64px", background: "#FFF7ED", borderTop: "1px solid #FFEDD5" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{
-            display: "flex",
-            flexDirection: isMobile ? "column" : "row",
-            alignItems: "center",
-            gap: 48,
-          }}>
-            <div style={{ flex: "1 1 500px" }}>
-              <span style={{
-                background: "#EA580C",
-                color: "#fff",
-                fontSize: 12,
-                fontWeight: 800,
-                padding: "6px 14px",
-                borderRadius: 20,
-                letterSpacing: "0.05em",
-                textTransform: "uppercase",
-              }}>
-                📖 TRAVEL GUIDES
-              </span>
-              <h2 style={{ fontSize: "clamp(26px, 3.5vw, 40px)", fontWeight: 800, color: "#111827", marginTop: 16, marginBottom: 16, lineHeight: 1.2 }}>
-                {lang === "it"
-                  ? "Scopri le nostre guide Road Trip editoriali"
-                  : "Discover our editorial Road Trip guides"}
-              </h2>
-              <p style={{ fontSize: 16, color: "#4B5563", lineHeight: 1.7, marginBottom: 24 }}>
-                {lang === "it"
-                  ? "Abbiamo racchiuso i migliori itinerari on the road in guide dettagliate giorno per giorno, con consigli sugli alloggi provati, tappe panoramiche e mappe pronte."
-                  : "We've distilled the world's finest road trip routes into day-by-day travel guides with tested accommodation tips, scenic overlooks, and ready-to-use maps."}
-              </p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
-                <Link
-                  href="/guides/usa-west-coast-18-days"
-                  style={{
-                    background: "#EA580C",
-                    color: "#fff",
-                    borderRadius: 10,
-                    padding: "12px 24px",
-                    fontWeight: 700,
-                    fontSize: 15,
-                    textDecoration: "none",
-                    boxShadow: "0 4px 16px rgba(234, 88, 12, 0.25)",
-                  }}
-                >
-                  🇺🇸 {lang === "it" ? "Guida USA West Coast (18 Giorni) →" : "USA West Coast Guide (18 Days) →"}
-                </Link>
-                <Link
-                  href="/guides"
-                  style={{
-                    background: "#fff",
-                    color: "#374151",
-                    border: "1px solid #E5E7EB",
-                    borderRadius: 10,
-                    padding: "12px 20px",
-                    fontWeight: 600,
-                    fontSize: 15,
-                    textDecoration: "none",
-                  }}
-                >
-                  {lang === "it" ? "Tutte le Guide" : "All Travel Guides"}
-                </Link>
-              </div>
-            </div>
-
-            <div style={{
-              flex: "1 1 400px",
-              borderRadius: 20,
-              overflow: "hidden",
-              boxShadow: "0 12px 36px rgba(0,0,0,0.1)",
-              border: "1px solid #E5E7EB",
-              position: "relative",
-              height: 320,
-              width: "100%",
-            }}>
-              <Image
-                src="/guides/usa-west-coast.png"
-                alt="USA West Coast Road Trip"
-                fill
-                style={{ objectFit: "cover" }}
-              />
-              <div style={{
-                position: "absolute",
-                inset: 0,
-                background: "linear-gradient(180deg, transparent 40%, rgba(17,24,39,0.85) 100%)",
-              }} />
-              <div style={{
-                position: "absolute",
-                bottom: 20,
-                left: 20,
-                right: 20,
-                color: "#fff",
-              }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: "#F97316" }}>FEATURED GUIDE</div>
-                <div style={{ fontSize: 20, fontWeight: 800 }}>USA on the Road: 18 {lang === "it" ? "Giorni" : "Days"}</div>
-                <div style={{ fontSize: 13, opacity: 0.9 }}>California, National Parks & Wild West · 4,160 km</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
       {/* ── Footer ── */}
       <Footer />

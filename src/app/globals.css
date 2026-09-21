@@ -1278,3 +1278,32 @@
     transform: rotate(360deg);
   }
 }
+
+/* ══ ACCESSIBILITY SKIP LINK ══ */
+.skip-link {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.skip-link:focus {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 99999;
+  width: auto;
+  height: auto;
+  clip: auto;
+  white-space: normal;
+  padding: 12px 20px;
+  background-color: #EA580C;
+  color: #ffffff;
+  border-radius: 8px;
+  font-weight: bold;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
