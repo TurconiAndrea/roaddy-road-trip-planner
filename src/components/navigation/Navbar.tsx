@@ -1,10 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useLanguageStore, Language } from "@/store/languageStore";
+
+const LANGUAGES: { code: Language; label: string; flag: string }[] = [
+  { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "it", label: "Italiano", flag: "🇮🇹" },
+];
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -14,6 +19,8 @@ export default function Navbar() {
 
   const [isMobile, setIsMobile] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     initLang();
@@ -22,6 +29,18 @@ export default function Navbar() {
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, [initLang]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setLangDropdownOpen(false);
+      }
+    };
+    if (langDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [langDropdownOpen]);
 
   // Determine current active section
   const isHomeOrPlanner = pathname === "/" || pathname === "/planner" || pathname.startsWith("/planner/");
@@ -33,9 +52,7 @@ export default function Navbar() {
     { label: lang === "it" ? "Guide di Viaggio" : "Travel Guides", href: "/guides", hideIfActive: isGuidesSection },
   ].filter((link) => !link.hideIfActive);
 
-  const toggleLanguage = () => {
-    setLang(lang === "en" ? "it" : "en");
-  };
+  const currentLangObj = LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0];
 
   return (
     <header
@@ -109,32 +126,85 @@ export default function Navbar() {
         </nav>
       ) : null}
 
-      {/* Action Buttons & Language Selector */}
+      {/* Action Buttons & Language Selector Dropdown */}
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        {/* Language Selector Button */}
-        <button
-          onClick={toggleLanguage}
-          aria-label="Select language"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            padding: "6px 12px",
-            borderRadius: 20,
-            border: "1px solid #E5E7EB",
-            background: "#F9FAFB",
-            fontSize: 13,
-            fontWeight: 700,
-            color: "#374151",
-            cursor: "pointer",
-            transition: "all 0.15s ease",
-          }}
-        >
-          <span>🌐</span>
-          <span style={{ color: lang === "en" ? "#EA580C" : "#9CA3AF" }}>EN</span>
-          <span style={{ color: "#D1D5DB" }}>|</span>
-          <span style={{ color: lang === "it" ? "#EA580C" : "#9CA3AF" }}>IT</span>
-        </button>
+        {/* Language Selector Dropdown */}
+        <div ref={dropdownRef} style={{ position: "relative" }}>
+          <button
+            onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+            aria-label="Select language"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "6px 12px",
+              borderRadius: 20,
+              border: "1px solid #E5E7EB",
+              background: "#F9FAFB",
+              fontSize: 13,
+              fontWeight: 700,
+              color: "#374151",
+              cursor: "pointer",
+              transition: "all 0.15s ease",
+            }}
+          >
+            <span>{currentLangObj.flag}</span>
+            <span>{currentLangObj.code.toUpperCase()}</span>
+            <span style={{ fontSize: 10, color: "#9CA3AF" }}>▼</span>
+          </button>
+
+          {langDropdownOpen && (
+            <div
+              style={{
+                position: "absolute",
+                top: "calc(100% + 6px)",
+                right: 0,
+                background: "#fff",
+                border: "1px solid #E5E7EB",
+                borderRadius: 12,
+                boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+                zIndex: 1000,
+                minWidth: 130,
+                overflow: "hidden",
+                padding: "4px 0",
+              }}
+            >
+              {LANGUAGES.map((l) => (
+                <button
+                  key={l.code}
+                  onClick={() => {
+                    setLang(l.code);
+                    setLangDropdownOpen(false);
+                  }}
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "8px 14px",
+                    fontSize: 13,
+                    fontWeight: lang === l.code ? 700 : 500,
+                    color: lang === l.code ? "#EA580C" : "#374151",
+                    background: lang === l.code ? "#FFF7ED" : "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    transition: "background 0.15s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (lang !== l.code) e.currentTarget.style.background = "#F9FAFB";
+                  }}
+                  onMouseLeave={(e) => {
+                    if (lang !== l.code) e.currentTarget.style.background = "transparent";
+                  }}
+                >
+                  <span>{l.flag}</span>
+                  <span>{l.label}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* Action CTA */}
         <Link

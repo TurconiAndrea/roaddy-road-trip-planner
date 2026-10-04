@@ -895,14 +895,10 @@ export default function GuideDetailTemplate({ guide }: GuideDetailTemplateProps)
                 justifyContent: "center",
               }}
             >
-              <button
-                onClick={() =>
-                  alert(
-                    lang === "it"
-                      ? "Grazie per l'interesse! Il link di acquisto diretto verrà attivato a breve."
-                      : "Thank you for your interest! The direct purchase link will be active shortly."
-                  )
-                }
+              <a
+                href={guide.kofiUrl || "https://ko-fi.com/andreaturconi"}
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   background: "#EA580C",
                   color: "#fff",
@@ -912,12 +908,16 @@ export default function GuideDetailTemplate({ guide }: GuideDetailTemplateProps)
                   borderRadius: 12,
                   cursor: "pointer",
                   border: "none",
+                  textDecoration: "none",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   boxShadow: "0 4px 20px rgba(234, 88, 12, 0.4)",
                   transition: "background 0.15s ease",
                 }}
               >
                 {lang === "it" ? "ACQUISTA LA GUIDA →" : "BUY FULL GUIDE →"}
-              </button>
+              </a>
 
               <button
                 onClick={handleLoadIntoPlanner}

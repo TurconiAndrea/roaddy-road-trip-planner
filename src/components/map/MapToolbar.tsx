@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTripStore, selectTrip, selectShowConn } from "@/store/tripStore";
+import { useLanguageStore } from "@/store/languageStore";
 import ConfirmDialog from "@/components/planner/ConfirmDialog";
 import type { Trip } from "@/types/trip";
 
@@ -85,6 +86,8 @@ export default function MapToolbar({ onFit, onToggleConnections }: Props) {
   const trip            = useTripStore(selectTrip);
   const showConnections = useTripStore(selectShowConn);
   const resetTrip       = useTripStore(s => s.resetTrip);
+  const lang            = useLanguageStore(s => s.lang);
+  const isIt            = lang === "it";
   const importRef       = useRef<HTMLInputElement>(null);
   const [resetOpen, setResetOpen] = useState(false);
 
@@ -106,11 +109,11 @@ export default function MapToolbar({ onFit, onToggleConnections }: Props) {
       try {
         const parsed = JSON.parse(ev.target?.result as string) as Trip;
         if (!parsed?.meta || !Array.isArray(parsed?.stops)) {
-          alert("Invalid trip file."); return;
+          alert(isIt ? "File viaggio non valido." : "Invalid trip file."); return;
         }
         localStorage.setItem("roaddy_trip_v1", JSON.stringify({ state: { trip: parsed }, version: 1 }));
         window.location.reload();
-      } catch { alert("Could not parse file."); }
+      } catch { alert(isIt ? "Impossibile leggere il file." : "Could not parse file."); }
     };
     reader.readAsText(file);
     e.target.value = "";
@@ -140,14 +143,16 @@ export default function MapToolbar({ onFit, onToggleConnections }: Props) {
         alignItems:    "flex-end",
       }}>
 
-        <ToolButton title="Fit map to stops" label="Fit to stops"
+        <ToolButton title={isIt ? "Adatta mappa alle tappe" : "Fit map to stops"}
+                    label={isIt ? "Adatta mappa" : "Fit to stops"}
                     hoverBg="#3B82F6" hoverShadow="0 4px 16px rgba(59,130,246,0.4)"
                     onClick={onFit}>
           {icon(<><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></>)}
         </ToolButton>
 
         <ToolButton
-          title="Toggle day connections" label="Toggle connections"
+          title={isIt ? "Attiva/Disattiva collegamenti" : "Toggle day connections"}
+          label={isIt ? "Collegamenti" : "Toggle connections"}
           color={showConnections ? "#EF4444" : "#6B7280"}
           hoverBg={showConnections ? "#EF4444" : "#6B7280"}
           hoverShadow={showConnections ? "0 4px 16px rgba(239,68,68,0.4)" : "0 4px 16px rgba(0,0,0,0.15)"}
@@ -158,19 +163,22 @@ export default function MapToolbar({ onFit, onToggleConnections }: Props) {
 
         <div style={dividerStyle} />
 
-        <ToolButton title="Import trip" label="Import trip"
+        <ToolButton title={isIt ? "Importa viaggio" : "Import trip"}
+                    label={isIt ? "Importa" : "Import trip"}
                     hoverBg="#6B7280" onClick={() => importRef.current?.click()}>
           {icon(<><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></>)}
           <input ref={importRef} type="file" accept="application/json"
                  onChange={handleImport} style={{ display: "none" }} />
         </ToolButton>
 
-        <ToolButton title="Export trip" label="Export trip"
+        <ToolButton title={isIt ? "Esporta viaggio" : "Export trip"}
+                    label={isIt ? "Esporta" : "Export trip"}
                     hoverBg="#6B7280" onClick={handleExport}>
           {icon(<><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></>)}
         </ToolButton>
 
-        <ToolButton title="Reset trip" label="Reset trip"
+        <ToolButton title={isIt ? "Reset viaggio" : "Reset trip"}
+                    label={isIt ? "Reset" : "Reset trip"}
                     color="#EF4444" hoverBg="#EF4444"
                     hoverShadow="0 4px 16px rgba(239,68,68,0.4)"
                     onClick={() => setResetOpen(true)}>
@@ -179,7 +187,8 @@ export default function MapToolbar({ onFit, onToggleConnections }: Props) {
 
         <div style={dividerStyle} />
 
-        <ToolButton title="Buy me a coffee" label="Buy me a coffee"
+        <ToolButton title={isIt ? "Offrimi un caffè" : "Buy me a coffee"}
+                    label={isIt ? "Offrimi un caffè" : "Buy me a coffee"}
                     color="#FBBF24" hoverBg="#FBBF24"
                     hoverShadow="0 4px 16px rgba(251,191,36,0.5)"
                     onClick={() => window.open("https://ko-fi.com/andreaturconi", "_blank")}>
@@ -190,8 +199,8 @@ export default function MapToolbar({ onFit, onToggleConnections }: Props) {
 
       <ConfirmDialog
         open={resetOpen}
-        title="Reset Trip"
-        message="This will delete all stops and start over. This action cannot be undone."
+        title={isIt ? "Reset Viaggio" : "Reset Trip"}
+        message={isIt ? "Questo eliminerà tutte le tappe e ricomincerà da capo. Questa azione non può essere annullata." : "This will delete all stops and start over. This action cannot be undone."}
         onConfirm={() => { resetTrip(); router.replace("/"); }}
         onClose={() => setResetOpen(false)}
       />

@@ -3,6 +3,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter }
   from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useLanguageStore } from "@/store/languageStore";
 
 interface Props {
   open:    boolean;
@@ -11,19 +12,26 @@ interface Props {
 }
 
 export default function ComingSoonDialog({ open, feature, onClose }: Props) {
+  const lang = useLanguageStore(s => s.lang);
+  const isIt = lang === "it";
+
   return (
     <Dialog open={open} onOpenChange={o => !o && onClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Coming Soon</DialogTitle>
+          <DialogTitle>{isIt ? "In arrivo a breve" : "Coming Soon"}</DialogTitle>
         </DialogHeader>
         <p style={{ color: "var(--muted-foreground)", fontSize: 14, padding: "4px 0" }}>
-          <strong>{feature}</strong> is not available yet. Stay tuned!
+          {isIt ? (
+            <>La funzionalità <strong>{feature}</strong> non è ancora disponibile. Resta sintonizzato!</>
+          ) : (
+            <><strong>{feature}</strong> is not available yet. Stay tuned!</>
+          )}
         </p>
         <DialogFooter>
           <Button onClick={onClose}
                   style={{ background: "var(--accent)", color: "white" }}>
-            Got it
+            {isIt ? "Ho capito" : "Got it"}
           </Button>
         </DialogFooter>
       </DialogContent>

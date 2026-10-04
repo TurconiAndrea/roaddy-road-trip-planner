@@ -4,20 +4,25 @@ import { useEffect }  from "react";
 import { useRouter }  from "next/navigation";
 import dynamic        from "next/dynamic";
 import { useTripStore, selectHydrated, selectTrip } from "@/store/tripStore";
+import { useLanguageStore } from "@/store/languageStore";
 import Topbar  from "@/components/planner/Topbar";
 import Sidebar from "@/components/planner/Sidebar";
 
 const MapView = dynamic(() => import("@/components/map/MapView"), {
   ssr: false,
-  loading: () => (
-    <div style={{
-      flex: 1, display: "flex", alignItems: "center",
-      justifyContent: "center", background: "#f0f4f8",
-      fontSize: 14, color: "#6B7280",
-    }}>
-      Loading map...
-    </div>
-  ),
+  loading: () => {
+    const lang = useLanguageStore.getState().lang;
+    const isIt = lang === "it";
+    return (
+      <div style={{
+        flex: 1, display: "flex", alignItems: "center",
+        justifyContent: "center", background: "#f0f4f8",
+        fontSize: 14, color: "#6B7280",
+      }}>
+        {isIt ? "Caricamento mappa..." : "Loading map..."}
+      </div>
+    );
+  },
 });
 
 export default function PlannerPage() {

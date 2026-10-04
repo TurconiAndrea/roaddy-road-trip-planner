@@ -25,53 +25,113 @@ if (typeof document !== "undefined") {
 
 const FEATURES = [
   {
-    icon:  "🗺️",
-    title: "Visualize Your Route Instantly",
-    desc:  "See your entire trip on an interactive map. As you add stops, the route updates automatically.",
+    icon: "🗺️",
+    title: {
+      en: "Visualize Your Route Instantly",
+      it: "Visualizza il Percorso all'Istante",
+    },
+    desc: {
+      en: "See your entire trip on an interactive map. As you add stops, the route updates automatically.",
+      it: "Vedi l'intero viaggio su una mappa interattiva. Mentre aggiungi tappe, il percorso si aggiorna automaticamente.",
+    },
   },
   {
-    icon:  "📍",
-    title: "Add Destinations in Seconds",
-    desc:  "Search for cities, landmarks, or addresses and quickly add them to your itinerary.",
+    icon: "📍",
+    title: {
+      en: "Add Destinations in Seconds",
+      it: "Aggiungi Destinazioni in Pochi Secondi",
+    },
+    desc: {
+      en: "Search for cities, landmarks, or addresses and quickly add them to your itinerary.",
+      it: "Cerca città, attrazioni o indirizzi e aggiungili rapidamente al tuo itinerario.",
+    },
   },
   {
-    icon:  "🗓️",
-    title: "Organize Stops by Day",
-    desc:  "Structure your road trip day by day so your journey stays clear and manageable.",
+    icon: "🗓️",
+    title: {
+      en: "Organize Stops by Day",
+      it: "Organizza le Tappe Giorno per Giorno",
+    },
+    desc: {
+      en: "Structure your road trip day by day so your journey stays clear and manageable.",
+      it: "Struttura il tuo viaggio giorno per giorno così la tua avventura resta chiara e ben organizzata.",
+    },
   },
   {
-    icon:  "↕️",
-    title: "Drag, Drop, and Reorder",
-    desc:  "Easily rearrange stops to adjust your route until it feels just right.",
+    icon: "↕️",
+    title: {
+      en: "Drag, Drop, and Reorder",
+      it: "Trascina, Rilascia e Riordina",
+    },
+    desc: {
+      en: "Easily rearrange stops to adjust your route until it feels just right.",
+      it: "Riorganizza facilmente le tappe per regolare il percorso fino a quando non è perfetto.",
+    },
   },
   {
-    icon:  "💾",
-    title: "Saves Automatically",
-    desc:  "Your plans are stored locally in your browser, so you can come back anytime.",
+    icon: "💾",
+    title: {
+      en: "Saves Automatically",
+      it: "Salvataggio Automatico",
+    },
+    desc: {
+      en: "Your plans are stored locally in your browser, so you can come back anytime.",
+      it: "I tuoi piani sono salvati localmente nel tuo browser, così puoi tornare in qualsiasi momento.",
+    },
   },
   {
-    icon:  "📱",
-    title: "Plan Anywhere",
-    desc:  "A responsive design means the planner works just as smoothly on your phone.",
+    icon: "📱",
+    title: {
+      en: "Plan Anywhere",
+      it: "Pianifica Ovunque",
+    },
+    desc: {
+      en: "A responsive design means the planner works just as smoothly on your phone.",
+      it: "Il design responsive fa sì che il planner funzioni al meglio anche sul tuo smartphone.",
+    },
   },
 ];
 
 const HOMEPAGE_FAQS = [
   {
-    question: "Is Roaddy completely free to use?",
-    answer: "Yes, Roaddy is 100% free to use and requires no credit card or account registration to plan your trips.",
+    question: {
+      en: "Is Roaddy completely free to use?",
+      it: "Roaddy è completamente gratuito?",
+    },
+    answer: {
+      en: "Yes, Roaddy is 100% free to use and requires no credit card or account registration to plan your trips.",
+      it: "Sì, Roaddy è gratuito al 100% e non richiede alcuna carta di credito o registrazione di un account per pianificare i tuoi viaggi.",
+    },
   },
   {
-    question: "Do I need an account to plan a road trip?",
-    answer: "No account is required. You can start creating your trip itinerary right away, and your progress is saved locally in your web browser.",
+    question: {
+      en: "Do I need an account to plan a road trip?",
+      it: "Serve un account per pianificare un viaggio?",
+    },
+    answer: {
+      en: "No account is required. You can start creating your trip itinerary right away, and your progress is saved locally in your web browser.",
+      it: "Nessun account richiesto. Puoi iniziare a creare il tuo itinerario subito e i tuoi progressi vengono salvati nel tuo browser.",
+    },
   },
   {
-    question: "How does Roaddy help plan multi-stop road trips?",
-    answer: "Roaddy provides an interactive map where you can search destinations, add intermediate stops, organize your trip day by day, and reorder stops easily.",
+    question: {
+      en: "How does Roaddy help plan multi-stop road trips?",
+      it: "Come aiuta Roaddy a pianificare viaggi a più tappe?",
+    },
+    answer: {
+      en: "Roaddy provides an interactive map where you can search destinations, add intermediate stops, organize your trip day by day, and reorder stops easily.",
+      it: "Roaddy offre una mappa interattiva in cui cercare destinazioni, aggiungere tappe intermedie, organizzare il viaggio giorno per giorno e riordinare i punti facilmente.",
+    },
   },
   {
-    question: "Does Roaddy provide curated travel guides?",
-    answer: "Yes, Roaddy includes editorial travel guides with detailed day-by-day itineraries, driving distances, national park highlights, and practical tips.",
+    question: {
+      en: "Does Roaddy provide curated travel guides?",
+      it: "Roaddy include guide di viaggio curate?",
+    },
+    answer: {
+      en: "Yes, Roaddy includes editorial travel guides with detailed day-by-day itineraries, driving distances, national park highlights, and practical tips.",
+      it: "Sì, Roaddy include guide editoriali dettagliate giorno per giorno con distanze di guida, consigli sui parchi nazionali e consigli pratici.",
+    },
   },
 ];
 
@@ -142,11 +202,26 @@ export default function LandingPage() {
   };
 
   const handleStart = () => {
-    if (!title.trim())       { setError("Please give your trip a name.");       return; }
-    if (!startCity.trim())   { setError("Please enter a starting city.");       return; }
-    if (!startDate)          { setError("Please select a start date.");         return; }
-    if (!endDate)            { setError("Please select an end date.");          return; }
-    if (endDate < startDate) { setError("End date must be after start date.");  return; }
+    if (!title.trim()) {
+      setError(lang === "it" ? "Inserisci un nome per il tuo viaggio." : "Please give your trip a name.");
+      return;
+    }
+    if (!startCity.trim()) {
+      setError(lang === "it" ? "Inserisci una città di partenza." : "Please enter a starting city.");
+      return;
+    }
+    if (!startDate) {
+      setError(lang === "it" ? "Seleziona una data di inizio." : "Please select a start date.");
+      return;
+    }
+    if (!endDate) {
+      setError(lang === "it" ? "Seleziona una data di fine." : "Please select an end date.");
+      return;
+    }
+    if (endDate < startDate) {
+      setError(lang === "it" ? "La data di fine deve essere successiva alla data di inizio." : "End date must be after start date.");
+      return;
+    }
 
     const start = new Date(startDate);
     const end   = new Date(endDate);
@@ -243,21 +318,27 @@ export default function LandingPage() {
                 fontWeight:   600,
                 marginBottom: 24,
               }}>
-                🚗 Free forever · No account needed
+                {lang === "it" ? "🚗 Gratis per sempre · Nessun account richiesto" : "🚗 Free forever · No account needed"}
               </div>
 
               <h1 style={{ fontSize: "clamp(28px, 4vw, 48px)", fontWeight: 800, lineHeight: 1.15, marginBottom: 16 }}>
-                Plan your perfect road trip{" "}
-                <span style={{ color: "#EA580C" }}>with ease</span>
+                {lang === "it" ? "Pianifica il tuo road trip perfetto " : "Plan your perfect road trip "}
+                <span style={{ color: "#EA580C" }}>
+                  {lang === "it" ? "in totale semplicità" : "with ease"}
+                </span>
               </h1>
 
               <p style={{ fontSize: 17, color: "#6B7280", lineHeight: 1.7, marginBottom: 24 }}>
-                Turn a list of destinations into a clear, visual journey. Add stops, organize
-                by day, and instantly see your route on an interactive map. No spreadsheets required.
+                {lang === "it"
+                  ? "Trasforma una lista di destinazioni in un viaggio chiaro e visivo. Aggiungi tappe, organizza giorno per giorno e visualizza all'istante il tuo percorso su una mappa interattiva. Senza fogli di calcolo."
+                  : "Turn a list of destinations into a clear, visual journey. Add stops, organize by day, and instantly see your route on an interactive map. No spreadsheets required."}
               </p>
 
               <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginBottom: 24 }}>
-                {["No credit card required", "Free forever plan"].map(t => (
+                {[
+                  lang === "it" ? "Nessuna carta di credito richiesta" : "No credit card required",
+                  lang === "it" ? "Piano gratuito per sempre" : "Free forever plan",
+                ].map(t => (
                   <span key={t} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#6B7280" }}>
                     <span style={{
                       width:          18,
@@ -337,8 +418,12 @@ export default function LandingPage() {
                     fontSize:       16,
                   }}>🛣️</div>
                   <div>
-                    <div style={{ fontSize: 11, color: "#6B7280" }}>Total Distance</div>
-                    <div style={{ fontSize: 15, fontWeight: 700 }}>1,240 miles</div>
+                    <div style={{ fontSize: 11, color: "#6B7280" }}>
+                      {lang === "it" ? "Distanza Totale" : "Total Distance"}
+                    </div>
+                    <div style={{ fontSize: 15, fontWeight: 700 }}>
+                      {lang === "it" ? "1.240 km" : "1,240 miles"}
+                    </div>
                     <div style={{ height: 3, width: 72, background: "#EA580C", borderRadius: 2, marginTop: 3 }} />
                   </div>
                 </div>
@@ -350,9 +435,11 @@ export default function LandingPage() {
         {/* ── Start Planning form ── */}
         <section id="start-form" style={{ padding: isMobile ? "48px 20px" : "96px 64px", background: "#F9FAFB" }}>
           <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-            <p style={{ color: "#EA580C", fontWeight: 600, fontSize: 14, marginBottom: 8, textAlign: "center" }}>GET STARTED</p>
+            <p style={{ color: "#EA580C", fontWeight: 600, fontSize: 14, marginBottom: 8, textAlign: "center" }}>
+              {lang === "it" ? "INIZIA ORA" : "GET STARTED"}
+            </p>
             <h2 style={{ fontSize: "clamp(22px, 3vw, 34px)", fontWeight: 800, textAlign: "center", marginBottom: 48 }}>
-              Start Planning Your Trip
+              {lang === "it" ? "Inizia a Pianificare il Tuo Viaggio" : "Start Planning Your Trip"}
             </h2>
 
             <div style={{
@@ -372,21 +459,21 @@ export default function LandingPage() {
                   gap:                 12,
                 }}>
                   <label style={labelStyle}>
-                    🚗 Trip name
+                    {lang === "it" ? "🚗 Nome del viaggio" : "🚗 Trip name"}
                     <input
                       style={inputStyle}
-                      placeholder="e.g. Pacific Coast Highway"
+                      placeholder={lang === "it" ? "es. Tour della California" : "e.g. Pacific Coast Highway"}
                       value={title}
                       onChange={e => { setTitle(e.target.value); setError(""); }}
                     />
                   </label>
 
                   <label style={labelStyle}>
-                    📍 Starting city
+                    {lang === "it" ? "📍 Città di partenza" : "📍 Starting city"}
                     <div style={{ position: "relative" }}>
                       <input
                         style={{ ...inputStyle, paddingRight: cityLoading ? 36 : 12 }}
-                        placeholder="e.g. San Francisco, CA"
+                        placeholder={lang === "it" ? "es. San Francisco" : "e.g. San Francisco, CA"}
                         value={startCity}
                         onChange={handleCityInput}
                         onBlur={() => setTimeout(() => setCitySuggestions([]), 200)}
@@ -452,7 +539,7 @@ export default function LandingPage() {
                   gap:                 12,
                 }}>
                   <label style={labelStyle}>
-                    📅 Start date
+                    {lang === "it" ? "📅 Data di inizio" : "📅 Start date"}
                     <input
                       type="date"
                       style={Object.assign({}, inputStyle, { width: "100%" })}
@@ -461,7 +548,7 @@ export default function LandingPage() {
                     />
                   </label>
                   <label style={labelStyle}>
-                    📅 End date
+                    {lang === "it" ? "📅 Data di fine" : "📅 End date"}
                     <input
                       type="date"
                       style={Object.assign({}, inputStyle, { width: "100%" })}
@@ -491,7 +578,7 @@ export default function LandingPage() {
                   onMouseEnter={e => (e.currentTarget.style.background = "#C2410C")}
                   onMouseLeave={e => (e.currentTarget.style.background = "#EA580C")}
                 >
-                  Start Planning →
+                  {lang === "it" ? "Inizia a Pianificare →" : "Start Planning →"}
                 </button>
               </div>
             </div>
@@ -501,13 +588,16 @@ export default function LandingPage() {
         {/* ── How it works ── */}
         <section style={{ padding: isMobile ? "48px 20px" : "96px 64px", background: "#fff", textAlign: "center" }}>
           <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-            <p style={{ color: "#EA580C", fontWeight: 600, fontSize: 14, marginBottom: 8 }}>HOW IT WORKS</p>
+            <p style={{ color: "#EA580C", fontWeight: 600, fontSize: 14, marginBottom: 8 }}>
+              {lang === "it" ? "COME FUNZIONA" : "HOW IT WORKS"}
+            </p>
             <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, marginBottom: 16 }}>
-              Design your journey, step by step
+              {lang === "it" ? "Disegna il tuo viaggio, passo dopo passo" : "Design your journey, step by step"}
             </h2>
             <p style={{ color: "#6B7280", maxWidth: 560, margin: "0 auto 56px", lineHeight: 1.7 }}>
-              Planning a road trip should be exciting, not complicated. Roaddy gives you a clean
-              workspace where you can build your itinerary exactly the way you imagine it.
+              {lang === "it"
+                ? "Pianificare un road trip dev'essere emozionante, non complicato. Roaddy ti offre uno spazio pulito dove puoi costruire il tuo itinerario esattamente come lo immagini."
+                : "Planning a road trip should be exciting, not complicated. Roaddy gives you a clean workspace where you can build your itinerary exactly the way you imagine it."}
             </p>
 
             <div style={{
@@ -516,15 +606,15 @@ export default function LandingPage() {
               gap:                 24,
             }}>
               {FEATURES.map(({ icon, title, desc }) => (
-                <div key={title} style={{
+                <div key={title.en} style={{
                   background:   "#F9FAFB",
                   borderRadius: 14,
                   padding:      "32px 28px",
                   textAlign:    "left",
                 }}>
                   <div style={{ fontSize: 28, marginBottom: 12 }}>{icon}</div>
-                  <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 8 }}>{title}</h3>
-                  <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.6, margin: 0 }}>{desc}</p>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 8 }}>{title[lang]}</h3>
+                  <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.6, margin: 0 }}>{desc[lang]}</p>
                 </div>
               ))}
             </div>
@@ -534,15 +624,17 @@ export default function LandingPage() {
         {/* ── FAQ Section (Semantic & Visually Accessible) ── */}
         <section style={{ padding: isMobile ? "48px 20px" : "80px 64px", background: "#F9FAFB", borderTop: "1px solid #E5E7EB" }}>
           <div style={{ maxWidth: 860, margin: "0 auto" }}>
-            <p style={{ color: "#EA580C", fontWeight: 600, fontSize: 14, marginBottom: 8, textAlign: "center" }}>FREQUENTLY ASKED QUESTIONS</p>
+            <p style={{ color: "#EA580C", fontWeight: 600, fontSize: 14, marginBottom: 8, textAlign: "center" }}>
+              {lang === "it" ? "DOMANDE FREQUENTI" : "FREQUENTLY ASKED QUESTIONS"}
+            </p>
             <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, textAlign: "center", marginBottom: 40 }}>
-              Everything you need to know about Roaddy
+              {lang === "it" ? "Tutto quello che devi sapere su Roaddy" : "Everything you need to know about Roaddy"}
             </h2>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               {HOMEPAGE_FAQS.map((faq) => (
                 <div
-                  key={faq.question}
+                  key={faq.question.en}
                   style={{
                     background: "#fff",
                     borderRadius: 12,
@@ -552,10 +644,10 @@ export default function LandingPage() {
                   }}
                 >
                   <h3 style={{ fontSize: 17, fontWeight: 700, color: "#111827", marginBottom: 8 }}>
-                    {faq.question}
+                    {faq.question[lang]}
                   </h3>
                   <p style={{ fontSize: 15, color: "#4B5563", lineHeight: 1.6, margin: 0 }}>
-                    {faq.answer}
+                    {faq.answer[lang]}
                   </p>
                 </div>
               ))}
@@ -571,11 +663,12 @@ export default function LandingPage() {
           color:      "#fff",
         }}>
           <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, marginBottom: 16 }}>
-            Your next adventure begins here
+            {lang === "it" ? "La tua prossima avventura inizia qui" : "Your next adventure begins here"}
           </h2>
           <p style={{ fontSize: 16, opacity: 0.85, maxWidth: 480, margin: "0 auto 32px", lineHeight: 1.7 }}>
-            Enter a few details about your journey and in seconds you&apos;ll be inside the
-            planner with your trip ready to go.
+            {lang === "it"
+              ? "Inserisci pochi dettagli sul tuo viaggio e in pochi secondi sarai nel planner con il tuo itinerario pronto."
+              : "Enter a few details about your journey and in seconds you'll be inside the planner with your trip ready to go."}
           </p>
           <button
             onClick={() => {
@@ -593,7 +686,7 @@ export default function LandingPage() {
               cursor:       "pointer",
             }}
           >
-            Start Planning for Free →
+            {lang === "it" ? "Inizia a Pianificare Gratis →" : "Start Planning for Free →"}
           </button>
         </section>
 
@@ -617,7 +710,7 @@ export default function LandingPage() {
                   letterSpacing: "0.05em",
                   textTransform: "uppercase",
                 }}>
-                  📖 TRAVEL GUIDES
+                  📖 {lang === "it" ? "GUIDE DI VIAGGIO" : "TRAVEL GUIDES"}
                 </span>
                 <h2 style={{ fontSize: "clamp(26px, 3.5vw, 40px)", fontWeight: 800, color: "#111827", marginTop: 16, marginBottom: 16, lineHeight: 1.2 }}>
                   {lang === "it"
@@ -691,7 +784,9 @@ export default function LandingPage() {
                   right: 20,
                   color: "#fff",
                 }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#F97316" }}>FEATURED GUIDE</div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#F97316" }}>
+                    {lang === "it" ? "GUIDA IN EVIDENZA" : "FEATURED GUIDE"}
+                  </div>
                   <div style={{ fontSize: 20, fontWeight: 800 }}>USA on the Road: 18 {lang === "it" ? "Giorni" : "Days"}</div>
                   <div style={{ fontSize: 13, opacity: 0.9 }}>California, National Parks & Wild West · 4,160 km</div>
                 </div>

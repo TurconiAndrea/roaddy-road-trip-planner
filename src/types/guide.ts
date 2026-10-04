@@ -61,4 +61,5 @@ export interface TravelGuide {
   fullGuideFeatures: GuideIncludedFeature[];
   priceEur?: number;
   originalPriceEur?: number;
+  kofiUrl?: string;
 }

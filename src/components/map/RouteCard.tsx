@@ -1,11 +1,14 @@
 "use client";
 
 import { useTripStore, selectRouteData, selectConnections } from "@/store/tripStore";
+import { useLanguageStore } from "@/store/languageStore";
 import { formatDuration } from "@/lib/utils";
 
 export default function RouteCard() {
   const routeData   = useTripStore(selectRouteData);
   const connections = useTripStore(selectConnections);
+  const lang        = useLanguageStore(s => s.lang);
+  const isIt        = lang === "it";
 
   const totalKm  = Object.values(routeData.distancesByDay).reduce((a, b) => a + b, 0);
   const totalSec = Object.values(routeData.durationsByDay).reduce((a, b) => a + b, 0);
@@ -20,7 +23,7 @@ export default function RouteCard() {
     <div className="route-card">
       <div className="route-card-dist">
         <span className="route-card-km">{grandKm.toFixed(0)} km</span>
-        <span className="route-card-sublabel">Total distance</span>
+        <span className="route-card-sublabel">{isIt ? "Distanza totale" : "Total distance"}</span>
       </div>
       <div className="route-card-divider" />
       <div className="route-card-time-row">
@@ -28,7 +31,7 @@ export default function RouteCard() {
           <span>🚗</span>
           <span className="route-card-time">{formatDuration(totalSec)}</span>
         </div>
-        <span className="route-card-sublabel">Est. time by car</span>
+        <span className="route-card-sublabel">{isIt ? "Tempo stimato in auto" : "Est. time by car"}</span>
       </div>
       <div className="route-card-bar">
         <div className="route-card-progress" style={{ width: `${pct}%` }} />

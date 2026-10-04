@@ -4,6 +4,7 @@ export const TRAVEL_GUIDES: TravelGuide[] = [
   {
     id: "usa-west-coast-18-days",
     slug: "usa-west-coast-18-days",
+    kofiUrl: "https://ko-fi.com/s/4a979138f4",
     title: {
       en: "USA on the Road",
       it: "USA on the Road",
